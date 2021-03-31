@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  stock_quote_manager:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    image: stock_quote_manager/backend/api
+    ports:
+      - '8081:8080'
+      - '5005:5005'
+    environment:
+      - ADDITIONAL_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xmx500m -Xms128m -XX:MaxMetaspaceSize=128m
+      - PROFILE=dev
+    links:
+      - mysql
+  mysql:
+    image: mysql:8
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_DATABASE=bootdb
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=estudos2012
+    volumes:
+      - ./docker/volume_mysql:/var/lib/mysql
